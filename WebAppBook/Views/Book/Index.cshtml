@@ -1,0 +1,89 @@
+﻿@model IEnumerable< WebAppBook.Models.BookViewModel>
+
+@{
+    ViewBag.Title = "Lista de Livros";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lista de Livros</h2>
+
+<p>
+    <td id="btnCreate" style="text-align:center;">
+        <a href="/Book/BookManager" class="btn btn-sm btn-success" data-toggle="tooltip" title="Adicionar">Adicionar
+            <label class="glyphicon glyphicon-plus" />
+        </a>
+    </td>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.isbn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.publisher)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.synopsis)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.isbn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.author)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.publisher)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.synopsis)
+        </td>
+        <td id="btnEdit_@item.id">
+            <a class="btn btn-xs btn-primary" href="/Book/BookManager/@item.id" data-toggle="tooltip" title="Editar">
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
+        </td>
+        <td id="btnDel_@item.id" style="text-align:center;">
+            <a href="javascript:DelBook(@item.id);" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Excluir">
+                <label class="glyphicon glyphicon-minus" />
+            </a>
+        </td>
+    </tr>
+}
+</table>
+<script type="text/javascript">
+    function DelBook(id) {
+        $.ajax({
+            url: '/Book/DelBook',
+            data: { id: id },
+            success: function (retorno, b, c) {
+                if (retorno && retorno.success) {
+                    var row = $('#btnDel_' + id).closest('tr');
+                    row.remove();
+                    alert('Livro com ID ' + id + ' foi excluido.');
+                } else {
+                    alert('Não foi possível excluir livro ' + id);
+                }
+            }
+        });
+    }
+</script>
